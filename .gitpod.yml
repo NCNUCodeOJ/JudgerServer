@@ -7,4 +7,4 @@ vscode:
     - ms-python.python
     - SonarSource.sonarlint-vscode
     - TabNine.tabnine-vscode
-    
+    - ms-toolsai.jupyter

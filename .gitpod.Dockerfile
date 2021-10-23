@@ -4,8 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN buildDeps='software-properties-common git libtool cmake python-dev python3-pip python-pip libseccomp-dev curl' && \
     apt-get update && apt-get -y install python3 $buildDeps && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
-     add-apt-repository ppa:openjdk-r/ppa && \
-    apt-get update && apt-get install -y gcc-9 g++-9 openjdk-11-jdk && \
+    add-apt-repository ppa:openjdk-r/ppa && \
+    apt-get update && apt-get install -y gcc-9 g++-9 openjdk-11-jdk sudo && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 40 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 40 && \
     pip3 install psutil &&\
