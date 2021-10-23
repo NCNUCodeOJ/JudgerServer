@@ -1,0 +1,18 @@
+{
+    "cSpell.words": [
+        "chdir",
+        "Dfile",
+        "Djava",
+        "fmax",
+        "getgrnam",
+        "getpwnam",
+        "GOCACHE",
+        "GODEBUG",
+        "GOMAXPROCS",
+        "GOPATH",
+        "madvdontneed",
+        "psutil",
+        "PYTHONIOENCODING"
+    ],
+    "python.pythonPath": "/Users/vincent/Library/Caches/pypoetry/virtualenvs/judgerserver-lTUn-W3--py3.8/bin/python"
+}
