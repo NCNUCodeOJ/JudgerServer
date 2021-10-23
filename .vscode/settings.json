@@ -14,5 +14,5 @@
         "psutil",
         "PYTHONIOENCODING"
     ],
-    "python.pythonPath": "/Users/vincent/Library/Caches/pypoetry/virtualenvs/judgerserver-lTUn-W3--py3.8/bin/python"
+    "python.pythonPath": "/usr/bin/python3"
 }

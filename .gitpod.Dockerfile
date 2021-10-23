@@ -17,5 +17,6 @@ RUN buildDeps='software-properties-common git libtool cmake python-dev python3-p
     mkdir -p /code && \
     useradd -u 12001 compiler && useradd -u 12002 code && \
     useradd -u 12003 spj && usermod -a -G code spj
-RUN mkdir /log
+RUN mkdir /log /judger /judger/run /judger/spj && \
+    chmod 777 /log && chmod 777 /judger/run && chmod 777 /judger/spj
 WORKDIR /code
