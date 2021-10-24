@@ -35,7 +35,7 @@ class InitSubmissionEnv(object):
         try:
             os.mkdir(self.work_dir)
             os.chown(self.work_dir, COMPILER_USER_UID, RUN_GROUP_GID)
-            os.chmod(self.work_dir, 0o711)
+            os.chmod(self.work_dir, 0o710)
         except OSError as exception:
             logger.exception(exception)
             JudgeClientError("failed to create runtime dir")

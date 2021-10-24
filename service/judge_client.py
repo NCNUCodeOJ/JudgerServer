@@ -108,7 +108,7 @@ class JudgeClient(object):
             user_output_dir = os.path.join(self._submission_dir, str(test_case_file_id))
             os.mkdir(user_output_dir)
             os.chown(user_output_dir, RUN_USER_UID, RUN_GROUP_GID)
-            os.chmod(user_output_dir, 0o711)
+            os.chmod(user_output_dir, 0o700)
             os.chdir(user_output_dir)
             # todo check permission
             user_output_file = os.path.join(user_output_dir, self._io_mode["output"])
