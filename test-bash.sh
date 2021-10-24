@@ -1,4 +1,4 @@
-docker run -v $PWD:/code -v $PWD/testcase/case/:/test_case \
+docker run -it -v $PWD:/code -v $PWD/testcase/case/:/test_case \
                --tmpfs /judger/run:exec \
                --tmpfs /judger/spj:exec \
                --tmpfs /log \
@@ -10,4 +10,4 @@ docker run -v $PWD:/code -v $PWD/testcase/case/:/test_case \
                --cap-drop SYS_CHROOT \
                --cap-drop SETFCAP \
                --cap-drop FSETID \
-               judger_test /bin/bash -c "python3 test.py"
+               judger_test /bin/bash
