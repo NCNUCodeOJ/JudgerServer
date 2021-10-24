@@ -12,7 +12,10 @@
         "GOPATH",
         "madvdontneed",
         "psutil",
-        "PYTHONIOENCODING"
+        "PYTHONIOENCODING",
+        "unbuffer"
     ],
-    "python.pythonPath": "/usr/bin/python3"
+    "python.pythonPath": "/Users/vincent/Library/Caches/pypoetry/virtualenvs/judgerserver-lTUn-W3--py3.8/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }

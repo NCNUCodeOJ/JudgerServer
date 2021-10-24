@@ -1,7 +1,17 @@
+"""
+define config parameters
+"""
 import os
 import pwd
 
 import grp
+
+class ProblemIOMode:
+    """
+    problem mode
+    """
+    standard = "Standard IO"
+    file = "File IO"
 
 JUDGER_WORKSPACE_BASE = "/judger/run"
 LOG_BASE = "/log"

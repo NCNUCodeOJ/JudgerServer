@@ -1,3 +1,6 @@
+"""
+logger setting
+"""
 import logging
 from .config import SERVER_LOG_PATH
 
@@ -8,7 +11,3 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.setLevel(logging.WARNING)
-
-class ProblemIOMode:
-    standard = "Standard IO"
-    file = "File IO"

@@ -1,15 +1,27 @@
+"""
+define custom exception
+"""
 class CustomException(Exception):
+    """
+    custom exception base class
+    """
     def __init__(self, message):
         super().__init__()
         self.message = message
 
 
 class JudgeClientError(CustomException):
-    pass
+    """
+    exception of judge client error
+    """
 
 
 class CompileError(CustomException):
-    pass
+    """
+    exception of compile error
+    """
 
 class SPJCompileError(CustomException):
-    pass
+    """
+    exception of spj compile error
+    """

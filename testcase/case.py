@@ -1,9 +1,12 @@
+"""
+define test case
+"""
+from random import randint
 from testcase.base import BaseTestCase
 from service.judge import judge
 from service.judge import compile_spj
 from service.errors import CompileError
 from service.errors import SPJCompileError
-from random import randint
 
 
 """
@@ -18,11 +21,18 @@ SYSTEM_ERROR = 5
 """
 
 class Case(BaseTestCase):
+
     def setUp(self):
+        """
+        set up the test case
+        """
         print("Running", self._testMethodName)
         self.workspace = self.init_workspace("case")
 
     def test_spj_compile_success(self):
+        """
+        test if spj compilation is success
+        """
         c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
         config = self.spj_compile_base_config
         try:
@@ -49,7 +59,7 @@ class Case(BaseTestCase):
             )
         except Exception as e:
             self.assertEqual(e, "invalid parameter")
-    
+
     def test_ac(self):
         config = self.base_config
         src = "a, b = map(int,input().split())\nprint(a+b)"
@@ -76,7 +86,7 @@ class Case(BaseTestCase):
         )
         for result in judge_result:
             self.assertEqual(result["result"], 1)
-    
+
     def test_memory_limit(self):
         config = self.base_config
         src = "a, b = map(int,input().split())\nprint(a+b)"
@@ -120,7 +130,7 @@ class Case(BaseTestCase):
         )
         for result in judge_result:
             self.assertEqual(result["result"], 0)
-    
+
     def test_spj_wa(self):
         c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
         version = randint(1,10000)
@@ -145,7 +155,7 @@ class Case(BaseTestCase):
         )
         for result in judge_result:
             self.assertEqual(result["result"], 0)
-    
+
     def test_unicode_wa(self):
         config = self.base_config
         src = "print(input()+'拉')"

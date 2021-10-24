@@ -1,3 +1,6 @@
+"""
+test base class
+"""
 import os
 import shutil
 from unittest import TestCase
@@ -8,6 +11,9 @@ from .setting import _c_lang_spj_config
 
 
 class BaseTestCase(TestCase):
+    """
+    test base class
+    """
     BAD_SYSTEM_CALL = 31
     default_env = ["LANG=en_US.UTF-8", "LANGUAGE=en_US:en", "LC_ALL=en_US.UTF-8"]
 
@@ -22,12 +28,15 @@ class BaseTestCase(TestCase):
 
     @property
     def base_config(self):
+        """return python3 base configuration"""
         return _py3_lang_config.copy()
-    
+
     @property
     def spj_compile_base_config(self):
+        """return c spj compile base configuration"""
         return _c_lang_spj_compile.copy()
-    
+
     @property
     def spj_base_config(self):
+        """return c spj configuration"""
         return _c_lang_spj_config.copy()

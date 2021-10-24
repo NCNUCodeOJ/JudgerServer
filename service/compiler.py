@@ -1,7 +1,13 @@
-import _judger
+"""
+compiler class
+"""
 import json
 import os
 import shlex
+
+# pylint: disable=import-error
+import _judger
+# pylint: enable=import-error
 
 from .config import COMPILER_LOG_PATH
 from .config import COMPILER_USER_UID
@@ -9,8 +15,13 @@ from .config import COMPILER_GROUP_GID
 from .errors import CompileError
 
 class Compiler(object):
-
+    """
+    Compiler class
+    """
     def compile(self, compile_config, src_path, output_dir):
+        """
+        compile code from submission or spj
+        """
         command = compile_config["compile_command"]
         exe_path = os.path.join(output_dir, compile_config["exe_name"])
         command = command.format(src_path=src_path, exe_dir=output_dir, exe_path=exe_path)
@@ -26,7 +37,7 @@ class Compiler(object):
                              max_output_size=20 * 1024 * 1024,
                              max_process_number=_judger.UNLIMITED,
                              exe_path=_command[0],
-                             # /dev/null is best, but in some system, this will call ioctl system call
+                    # /dev/null is best, but in some system, this will call ioctl system call
                              input_path=src_path,
                              output_path=compiler_out,
                              error_path=compiler_out,
@@ -38,12 +49,12 @@ class Compiler(object):
                              gid=COMPILER_GROUP_GID)
         if result["result"] != _judger.RESULT_SUCCESS:
             if os.path.exists(compiler_out):
-                with open(compiler_out, encoding="utf-8") as f:
-                    error = f.read().strip()
+                with open(compiler_out, encoding="utf-8") as file:
+                    error = file.read().strip()
                     os.remove(compiler_out)
                     if error:
                         raise CompileError(error)
-            raise CompileError("Compiler runtime error, info: %s" % json.dumps(result))
-        else:
-            os.remove(compiler_out)
-            return exe_path
+            error_msg = "Compiler runtime error, info: {result}"
+            raise CompileError(error_msg.format(result=json.dumps(result)))
+        os.remove(compiler_out)
+        return exe_path

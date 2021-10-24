@@ -1,4 +1,3 @@
-import _judger
 import hashlib
 import json
 import os
@@ -7,6 +6,9 @@ import shlex
 import psutil
 
 from multiprocessing import Pool
+
+import _judger
+
 from .config import JUDGER_RUN_LOG_PATH
 from .config import RUN_GROUP_GID
 from .config import RUN_USER_UID
@@ -14,7 +16,7 @@ from .config import SPJ_EXE_DIR
 from .config import SPJ_USER_UID
 from .config import SPJ_GROUP_GID
 from .errors import JudgeClientError
-from .utils import ProblemIOMode
+from .config import ProblemIOMode
 
 SPJ_WA = 1
 SPJ_AC = 0
@@ -45,8 +47,8 @@ class JudgeClient(object):
         self._io_mode = io_mode
 
         if self._spj_version and self._spj_config:
-            self._spj_exe = os.path.join(SPJ_EXE_DIR,
-                                         self._spj_config["exe_name"].format(spj_version=self._spj_version))
+            self._spj_config["exe_name"] = self._spj_config["exe_name"].format(spj_version=self._spj_version)
+            self._spj_exe = os.path.join(SPJ_EXE_DIR, self._spj_config["exe_name"])
             if not os.path.exists(self._spj_exe):
                 raise JudgeClientError("spj exe not found")
 
@@ -61,7 +63,7 @@ class JudgeClient(object):
 
     def _get_test_case_file_info(self, test_case_file_id):
         return self._test_case_info["test_cases"][test_case_file_id]
-    
+
     def _compare_output(self, test_case_file_id, user_output_file):
         with open(user_output_file, "rb") as f:
             content = f.read()
@@ -187,7 +189,7 @@ class JudgeClient(object):
                 pass
 
         return run_result
-    
+
     def run(self):
         tmp_result = []
         result = []
@@ -197,10 +199,10 @@ class JudgeClient(object):
         self._pool.join()
         for item in tmp_result:
             # exception will be raised, when get() is called
-            # # http://stackoverflow.com/questions/22094852/how-to-catch-exceptions-in-workers-in-multiprocessing
+            # http://stackoverflow.com/questions/22094852/how-to-catch-exceptions-in-workers-in-multiprocessing
             result.append(item.get())
         return result
-    
+
     def __getstate__(self):
         # http://stackoverflow.com/questions/25382455/python-notimplementederror-pool-objects-cannot-be-passed-between-processes
         self_dict = self.__dict__.copy()
