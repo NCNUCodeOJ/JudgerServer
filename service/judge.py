@@ -1,8 +1,11 @@
 """
 define all function related to judge submission
 """
+
 import os
 import shutil
+from typing import Union
+from typing import NoReturn
 
 from .compiler import Compiler
 from .utils import logger
@@ -28,10 +31,10 @@ class InitSubmissionEnv(object):
     """
     create environment for submission and delete when done
     """
-    def __init__(self, judger_workspace, submission_id):
+    def __init__(self, judger_workspace: str, submission_id: str):
         self.work_dir = os.path.join(judger_workspace, submission_id)
 
-    def __enter__(self):
+    def __enter__(self) -> str:
         try:
             os.mkdir(self.work_dir)
             os.chown(self.work_dir, COMPILER_USER_UID, RUN_GROUP_GID)
@@ -41,7 +44,7 @@ class InitSubmissionEnv(object):
             JudgeClientError("failed to create runtime dir")
         return self.work_dir
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb)  -> NoReturn:
         if not DEBUG:
             try:
                 shutil.rmtree(self.work_dir)
@@ -50,10 +53,11 @@ class InitSubmissionEnv(object):
                 JudgeClientError("failed to clean runtime dir")
 
 
-def judge(  language_config, src, max_cpu_time, max_memory,
-            submission_id, test_case_id=None, output=False,
-            spj_version=None, spj_config=None,
-            spj_compile_config=None, spj_src=None):
+def judge(  language_config: dict, src: str, max_cpu_time: int, max_memory: int,
+            submission_id: str, test_case_id: str = None,
+            program_name: str = None, output: bool = False,
+            spj_version: str = None, spj_config: dict = None,
+            spj_compile_config: dict = None, spj_src: str = None) -> Union[list, None]:
 
     """
     judge submission
@@ -63,7 +67,12 @@ def judge(  language_config, src, max_cpu_time, max_memory,
         JudgeClientError("invalid parameter")
         return
 
+    if program_name is None:
+        program_name = "Main"
+
     compile_config = language_config.get("compile")
+    compile_config["src_name"] = compile_config["src_name"].format(program_name=program_name)
+    compile_config["exe_name"] = compile_config["exe_name"].format(program_name=program_name)
     run_config = language_config["run"]
     io_mode = {"io_mode": ProblemIOMode.standard}
     is_spj = spj_version and spj_config
@@ -109,6 +118,7 @@ def judge(  language_config, src, max_cpu_time, max_memory,
 
         judge_client = JudgeClient(run_config=language_config["run"],
                                        exe_path=exe_path,
+                                       program_name=program_name,
                                        max_cpu_time=max_cpu_time,
                                        max_memory=max_memory,
                                        test_case_dir=test_case_dir,
@@ -121,10 +131,12 @@ def judge(  language_config, src, max_cpu_time, max_memory,
         return run_result
 
 
-def compile_spj(spj_version, src, spj_compile_config):
+def compile_spj(spj_version: str, src: str, spj_compile_config: dict):
+
     """
     function of compile special judge
     """
+
     spj_compile_config["src_name"] = spj_compile_config["src_name"].format(spj_version=spj_version)
     spj_compile_config["exe_name"] = spj_compile_config["exe_name"].format(spj_version=spj_version)
 
