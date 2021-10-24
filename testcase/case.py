@@ -2,6 +2,7 @@ from testcase.base import BaseTestCase
 from service.judge import judge
 from service.judge import compile_spj
 from service.errors import CompileError
+from service.errors import SPJCompileError
 from random import randint
 
 
@@ -20,6 +21,24 @@ class Case(BaseTestCase):
     def setUp(self):
         print("Running", self._testMethodName)
         self.workspace = self.init_workspace("case")
+
+    def test_spj_compile_success(self):
+        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
+        config = self.spj_compile_base_config
+        try:
+            result = compile_spj(randint(1,10000), c_spj_src, config)
+            self.assertEqual(result, "success")
+        except Exception as e:
+            print(e.message)
+            self.assertEqual(type(e), None)
+
+    def test_spj_compile_error(self):
+        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;]\n}"
+        config = self.spj_compile_base_config
+        try:
+            compile_spj(randint(1,10000), c_spj_src, config)
+        except Exception as e:
+            self.assertEqual(type(e), SPJCompileError)
 
     def test_miss_test_case_id(self):
         config = self.base_config
@@ -85,13 +104,53 @@ class Case(BaseTestCase):
             )
         except Exception as e:
             self.assertEqual(type(e), CompileError)
-    
-    def test_spj_compile_success(self):
-        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
-        config = self.spj_base_config
+
+    def test_spj_ac(self):
+        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 0;\n}"
+        version = randint(1,10000)
         try:
-            result = compile_spj(randint(1,1024), c_spj_src, config)
-            self.assertEqual(result, "success")
+            compile_spj(version, c_spj_src, self.spj_compile_base_config)
         except Exception as e:
-            print(e.message)
-            self.assertEqual(type(e), None)
+            self.assertEqual(type(e), SPJCompileError)
+        src = "a, b = map(int,input().split())\nprint(a+b)"
+        config = self.base_config
+        judge_result = judge(
+            config, src, 1000, 128*1024*1024, "test1", "spj", output=True,
+            spj_version=version, spj_config=self.spj_base_config
+        )
+        for result in judge_result:
+            self.assertEqual(result["result"], 0)
+    
+    def test_spj_wa(self):
+        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
+        version = randint(1,10000)
+        try:
+            compile_spj(version, c_spj_src, self.spj_compile_base_config)
+        except Exception as e:
+            self.assertEqual(type(e), SPJCompileError)
+        src = "a, b = map(int,input().split())\nprint(a+b)"
+        config = self.base_config
+        judge_result = judge(
+            config, src, 1000, 128*1024*1024, "test1", "spj",
+            spj_version=version, spj_config=self.spj_base_config
+        )
+        for result in judge_result:
+            self.assertEqual(result["result"], -1)
+
+    def test_unicode_ac(self):
+        config = self.base_config
+        src = "print(input())"
+        judge_result = judge(
+            config, src, 1000, 128*1024*1024, "test1", "unicode",
+        )
+        for result in judge_result:
+            self.assertEqual(result["result"], 0)
+    
+    def test_unicode_wa(self):
+        config = self.base_config
+        src = "print(input()+'拉')"
+        judge_result = judge(
+            config, src, 1000, 128*1024*1024, "test1", "unicode",
+        )
+        for result in judge_result:
+            self.assertEqual(result["result"], -1)

@@ -63,8 +63,8 @@ def judge(  language_config, src, max_cpu_time, max_memory,
         # spj src has not been compiled
         if not os.path.isfile(spj_exe_path):
             logger.warning("%s does not exists, spj src will be recompiled")
-                # compile_spj(spj_version=spj_version, src=spj_src,
-                #                 spj_compile_config=spj_compile_config)
+            compile_spj(spj_version=spj_version, src=spj_src,
+                        spj_compile_config=spj_compile_config)
     
     with InitSubmissionEnv(JUDGER_WORKSPACE_BASE, submission_id=str(submission_id)) as dir:
         submission_dir = dir

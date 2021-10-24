@@ -1,6 +1,9 @@
 import os
 import shutil
 from unittest import TestCase
+from .setting import _py3_lang_config
+from .setting import _c_lang_spj_compile
+from .setting import _c_lang_spj_config
 
 
 
@@ -19,31 +22,12 @@ class BaseTestCase(TestCase):
 
     @property
     def base_config(self):
-        config = {
-            "compile": {
-                "src_name": "solution.py",
-                "exe_name": "__pycache__/solution.cpython-36.pyc",
-                "max_cpu_time": 3000,
-                "max_real_time": 10000,
-                "max_memory": 128 * 1024 * 1024,
-                "compile_command": "/usr/bin/python3 -m py_compile {src_path}",
-            },
-            "run": {
-                "command": "/usr/bin/python3 {exe_path}",
-                "seccomp_rule": "general",
-                "env": self.default_env + ["PYTHONIOENCODING=utf-8"]
-            }
-        }
-        return config
+        return _py3_lang_config.copy()
+    
+    @property
+    def spj_compile_base_config(self):
+        return _c_lang_spj_compile.copy()
     
     @property
     def spj_base_config(self):
-        config = {
-            "src_name": "spj-{spj_version}.c",
-            "exe_name": "spj-{spj_version}",
-            "max_cpu_time": 3000,
-            "max_real_time": 5000,
-            "max_memory": 1024 * 1024 * 1024,
-            "compile_command": "/usr/bin/gcc -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c99 {src_path} -lm -o {exe_path}"
-        }
-        return config
+        return _c_lang_spj_config.copy()

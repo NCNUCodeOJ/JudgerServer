@@ -94,7 +94,6 @@ class JudgeClient(object):
                              seccomp_rule_name=seccomp_rule_name,
                              uid=SPJ_USER_UID,
                              gid=SPJ_GROUP_GID)
-
         if result["result"] == _judger.RESULT_SUCCESS or \
                 (result["result"] == _judger.RESULT_RUNTIME_ERROR and
                  result["exit_code"] in [SPJ_WA, SPJ_ERROR] and result["signal"] == 0):
