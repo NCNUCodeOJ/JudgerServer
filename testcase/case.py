@@ -132,7 +132,7 @@ class Case(BaseTestCase):
             self.assertEqual(result["result"], 0)
 
     def test_spj_wa(self):
-        c_spj_src = "#include <stdio.h>\nint main(){\n\treturn 1;\n}"
+        c_spj_src = "#include <stdio.h>\nint main(){\n\tprintf(\"ad\");return 1;\n}"
         version = randint(1,10000)
         try:
             compile_spj(version, c_spj_src, self.spj_compile_base_config)
