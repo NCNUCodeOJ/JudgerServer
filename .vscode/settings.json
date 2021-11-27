@@ -14,6 +14,7 @@
         "iostream",
         "madvdontneed",
         "printf",
+        "println",
         "psutil",
         "PYTHONIOENCODING",
         "scanf",

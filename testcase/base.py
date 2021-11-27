@@ -17,6 +17,7 @@ import os
 import shutil
 import random
 import string
+import copy
 from unittest import TestCase
 
 from service.judge import judge
@@ -26,6 +27,7 @@ from .setting import _c_lang_config
 from .setting import _cpp_lang_config
 from .setting import _c_lang_spj_compile
 from .setting import _c_lang_spj_config
+from .setting import _java_lang_config
 
 class BaseTestCase(TestCase):
     """
@@ -51,27 +53,33 @@ class BaseTestCase(TestCase):
     @property
     def py3_base_config(self):
         """return python3 base configuration"""
-        return _py3_lang_config.copy()
+        return copy.deepcopy(_py3_lang_config)
 
     @property
     def clang_base_config(self):
         """return clang base configuration"""
-        return _c_lang_config.copy()
+        return copy.deepcopy(_c_lang_config)
+
 
     @property
     def cpp_base_config(self):
         """return clang base configuration"""
-        return _cpp_lang_config.copy()
+        return copy.deepcopy(_cpp_lang_config)
 
     @property
     def spj_clang_compile_base_config(self):
         """return c spj compile base configuration"""
-        return _c_lang_spj_compile.copy()
+        return copy.deepcopy(_c_lang_spj_compile)
 
     @property
     def spj_clang_base_config(self):
         """return c spj configuration"""
-        return _c_lang_spj_config.copy()
+        return copy.deepcopy(_c_lang_spj_config)
+
+    @property
+    def java_base_config(self):
+        """return java base configuration"""
+        return copy.deepcopy(_java_lang_config)
 
 def random_string():
 

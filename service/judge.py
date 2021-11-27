@@ -66,9 +66,10 @@ def judge(  language_config: dict, src: str, max_cpu_time: int, max_memory: int,
     if not test_case_id:
         JudgeClientError("invalid parameter")
         return
-
     if program_name is None:
         program_name = "Main"
+    else:
+        print(program_name)
 
     compile_config = language_config.get("compile")
     compile_config["src_name"] = compile_config["src_name"].format(program_name=program_name)
@@ -110,7 +111,7 @@ def judge(  language_config: dict, src: str, max_cpu_time: int, max_memory: int,
                 os.chown(exe_path, RUN_USER_UID, 0)
                 os.chmod(exe_path, 0o500)
             except OSError as exception:
-                print("Exception %s", exception)
+                print("Exception", exception)
         else:
             exe_path = os.path.join(submission_dir, run_config["exe_name"])
             with open(exe_path, "w", encoding="utf-8") as file:

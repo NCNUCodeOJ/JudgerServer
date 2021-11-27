@@ -77,7 +77,7 @@ _cpp_lang_spj_config = {
 _java_lang_config = {
     "compile": {
         "src_name": "{program_name}.java",
-        "exe_name": "{program_name}",
+        "exe_name": "{program_name}.class",
         "max_cpu_time": 5000,
         "max_real_time": 10000,
         "max_memory": -1,
