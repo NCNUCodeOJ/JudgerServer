@@ -4,16 +4,18 @@ class Choices:
         d = cls.__dict__
         return [d[item] for item in d.keys() if not item.startswith("__")]
 
+
 class ProblemIOMode(Choices):
     standard = "Standard IO"
     file = "File IO"
+
 
 default_env = ["LANG=en_US.UTF-8", "LANGUAGE=en_US:en", "LC_ALL=en_US.UTF-8"]
 
 _c_lang_config = {
     "compile": {
-        "src_name": "main.c",
-        "exe_name": "main",
+        "src_name": "{program_name}.c",
+        "exe_name": "{program_name}",
         "max_cpu_time": 3000,
         "max_real_time": 10000,
         "max_memory": 256 * 1024 * 1024,
@@ -43,8 +45,8 @@ _c_lang_spj_config = {
 
 _cpp_lang_config = {
     "compile": {
-        "src_name": "main.cpp",
-        "exe_name": "main",
+        "src_name": "{program_name}.cpp",
+        "exe_name": "{program_name}",
         "max_cpu_time": 10000,
         "max_real_time": 20000,
         "max_memory": 1024 * 1024 * 1024,
@@ -74,8 +76,8 @@ _cpp_lang_spj_config = {
 
 _java_lang_config = {
     "compile": {
-        "src_name": "Main.java",
-        "exe_name": "Main",
+        "src_name": "{program_name}.java",
+        "exe_name": "{program_name}.class",
         "max_cpu_time": 5000,
         "max_real_time": 10000,
         "max_memory": -1,
@@ -83,7 +85,7 @@ _java_lang_config = {
     },
     "run": {
         "command": "/usr/bin/java -cp {exe_dir} -XX:MaxRAM={max_memory}k -Djava.security.manager -Dfile.encoding=UTF-8 "
-                   "-Djava.security.policy==/etc/java_policy -Djava.awt.headless=true Main",
+                   "-Djava.security.policy==/etc/java_policy -Djava.awt.headless=true {program_name}",
         "seccomp_rule": None,
         "env": default_env,
         "memory_limit_check_only": 1
@@ -92,8 +94,8 @@ _java_lang_config = {
 
 _py3_lang_config = {
     "compile": {
-        "src_name": "solution.py",
-        "exe_name": "__pycache__/solution.cpython-36.pyc",
+        "src_name": "{program_name}.py",
+        "exe_name": "__pycache__/{program_name}.cpython-36.pyc",
         "max_cpu_time": 3000,
         "max_real_time": 10000,
         "max_memory": 128 * 1024 * 1024,
@@ -108,8 +110,8 @@ _py3_lang_config = {
 
 _go_lang_config = {
     "compile": {
-        "src_name": "main.go",
-        "exe_name": "main",
+        "src_name": "{program_name}.go",
+        "exe_name": "{program_name}",
         "max_cpu_time": 3000,
         "max_real_time": 5000,
         "max_memory": 1024 * 1024 * 1024,
@@ -125,32 +127,15 @@ _go_lang_config = {
     }
 }
 
-_node_lang_config = {
-    "compile": {
-        "src_name": "main.js",
-        "exe_name": "main.js",
-        "max_cpu_time": 3000,
-        "max_real_time": 5000,
-        "max_memory": 1024 * 1024 * 1024,
-        "compile_command": "/usr/bin/node --check {src_path}",
-        "env": default_env
-    },
-    "run": {
-        "command": "/usr/bin/node {exe_path}",
-        "seccomp_rule": "node",
-        # 降低内存占用
-        "env": default_env,
-        "memory_limit_check_only": 1
-    }
-}
-
 languages = [
     {"config": _c_lang_config, "spj": {"compile": _c_lang_spj_compile, "config": _c_lang_spj_config},
      "name": "C", "description": "GCC 9.4", "content_type": "text/x-csrc"},
     {"config": _cpp_lang_config, "spj": {"compile": _cpp_lang_spj_compile, "config": _cpp_lang_spj_config},
      "name": "C++", "description": "G++ 9.4", "content_type": "text/x-c++src"},
-    {"config": _java_lang_config, "name": "Java", "description": "OpenJDK 11", "content_type": "text/x-java"},
-    {"config": _py3_lang_config, "name": "Python3", "description": "Python 3.6", "content_type": "text/x-python"},
-    {"config": _go_lang_config, "name": "Golang", "description": "Golang 1.17", "content_type": "text/x-go"},
-    {"config": _node_lang_config, "name": "JavaScript", "description": "Node 14", "content_type": "text/javascript"},
+    {"config": _java_lang_config, "name": "Java",
+        "description": "OpenJDK 11", "content_type": "text/x-java"},
+    {"config": _py3_lang_config, "name": "Python3",
+        "description": "Python 3.6", "content_type": "text/x-python"},
+    {"config": _go_lang_config, "name": "Golang",
+        "description": "Golang 1.17", "content_type": "text/x-go"},
 ]

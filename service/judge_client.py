@@ -28,10 +28,11 @@ def _run(instance, test_case_file_id):
 
 
 class JudgeClient(object):
-    def __init__(self, run_config, exe_path, max_cpu_time, max_memory, test_case_dir,
+    def __init__(self, run_config, exe_path,  program_name, max_cpu_time, max_memory, test_case_dir,
                  submission_dir, spj_version, spj_config, io_mode, output=False):
         self._run_config = run_config
         self._exe_path = exe_path
+        self._program_name = program_name
         self._max_cpu_time = max_cpu_time
         self._max_memory = max_memory
         self._max_real_time = self._max_cpu_time * 3
@@ -47,8 +48,10 @@ class JudgeClient(object):
         self._io_mode = io_mode
 
         if self._spj_version and self._spj_config:
-            self._spj_config["exe_name"] = self._spj_config["exe_name"].format(spj_version=self._spj_version)
-            self._spj_exe = os.path.join(SPJ_EXE_DIR, self._spj_config["exe_name"])
+            self._spj_config["exe_name"] = self._spj_config["exe_name"].format(
+                spj_version=self._spj_version)
+            self._spj_exe = os.path.join(
+                SPJ_EXE_DIR, self._spj_config["exe_name"])
             if not os.path.exists(self._spj_exe):
                 raise JudgeClientError("spj exe not found")
 
@@ -68,7 +71,8 @@ class JudgeClient(object):
         with open(user_output_file, "rb") as f:
             content = f.read()
         output_md5 = hashlib.md5(content.rstrip()).hexdigest()
-        result = output_md5 == self._get_test_case_file_info(test_case_file_id)["stripped_output_md5"]
+        result = output_md5 == self._get_test_case_file_info(test_case_file_id)[
+            "stripped_output_md5"]
         return output_md5, result
 
     def _spj(self, in_file_path, user_out_file_path):
@@ -105,24 +109,31 @@ class JudgeClient(object):
 
     def _user_output_file_path(self, test_case_file_id, in_file):
         if self._io_mode["io_mode"] == ProblemIOMode.file:
-            user_output_dir = os.path.join(self._submission_dir, str(test_case_file_id))
+            user_output_dir = os.path.join(
+                self._submission_dir, str(test_case_file_id))
             os.mkdir(user_output_dir)
             os.chown(user_output_dir, RUN_USER_UID, RUN_GROUP_GID)
             os.chmod(user_output_dir, 0o700)
             os.chdir(user_output_dir)
             # todo check permission
-            user_output_file = os.path.join(user_output_dir, self._io_mode["output"])
+            user_output_file = os.path.join(
+                user_output_dir, self._io_mode["output"])
             real_user_output_file = os.path.join(user_output_dir, "stdio.txt")
-            shutil.copyfile(in_file, os.path.join(user_output_dir, self._io_mode["input"]))
-            kwargs = {"input_path": in_file, "output_path": real_user_output_file, "error_path": real_user_output_file}
+            shutil.copyfile(in_file, os.path.join(
+                user_output_dir, self._io_mode["input"]))
+            kwargs = {"input_path": in_file, "output_path": real_user_output_file,
+                      "error_path": real_user_output_file}
         else:
-            real_user_output_file = user_output_file = os.path.join(self._submission_dir, test_case_file_id + ".out")
-            kwargs = {"input_path": in_file, "output_path": real_user_output_file, "error_path": real_user_output_file}
+            real_user_output_file = user_output_file = os.path.join(
+                self._submission_dir, test_case_file_id + ".out")
+            kwargs = {"input_path": in_file, "output_path": real_user_output_file,
+                      "error_path": real_user_output_file}
 
         return user_output_file, kwargs
 
     def _check_spj_ac(self, run_result, user_output_file, in_file):
-        spj_result = self._spj(in_file_path=in_file, user_out_file_path=user_output_file)
+        spj_result = self._spj(in_file_path=in_file,
+                               user_out_file_path=user_output_file)
         if spj_result == SPJ_WA:
             run_result["result"] = _judger.RESULT_WRONG_ANSWER
         elif spj_result == SPJ_ERROR:
@@ -138,21 +149,28 @@ class JudgeClient(object):
                     raise JudgeClientError("spj_config or spj_version not set")
                 self._check_spj_ac(run_result, in_file, user_output_file)
             else:
-                run_result["output_md5"], is_ac = self._compare_output(test_case_file_id, user_output_file)
+                run_result["output_md5"], is_ac = self._compare_output(
+                    test_case_file_id, user_output_file)
                 # -1 == Wrong Answer
                 if not is_ac:
                     run_result["result"] = _judger.RESULT_WRONG_ANSWER
 
     def _judge_one(self, test_case_file_id):
         test_case_info = self._get_test_case_file_info(test_case_file_id)
-        in_file = os.path.join(self._test_case_dir, test_case_info["input_name"])
+        in_file = os.path.join(self._test_case_dir,
+                               test_case_info["input_name"])
 
-        user_output_file, kwargs = self._user_output_file_path(test_case_file_id, in_file)
+        user_output_file, kwargs = self._user_output_file_path(
+            test_case_file_id, in_file)
 
-        command = self._run_config["command"].format(exe_path=self._exe_path, exe_dir=os.path.dirname(self._exe_path),
-                                                     max_memory=int(self._max_memory / 1024))
+        command = self._run_config["command"].format(
+            exe_path=self._exe_path, exe_dir=os.path.dirname(self._exe_path),
+            program_name=self._program_name, max_memory=int(
+                self._max_memory / 1024)
+        )
         command = shlex.split(command)
-        env = ["PATH=" + os.environ.get("PATH", "")] + self._run_config.get("env", [])
+        env = ["PATH=" + os.environ.get("PATH", "")] + \
+            self._run_config.get("env", [])
 
         seccomp_rule = self._run_config["seccomp_rule"]
         if isinstance(seccomp_rule, dict):
@@ -162,7 +180,8 @@ class JudgeClient(object):
                                  max_real_time=self._max_real_time,
                                  max_memory=self._max_memory,
                                  max_stack=128 * 1024 * 1024,
-                                 max_output_size=max(test_case_info.get("output_size", 0) * 2, 1024 * 1024 * 16),
+                                 max_output_size=max(test_case_info.get(
+                                     "output_size", 0) * 2, 1024 * 1024 * 16),
                                  max_process_number=_judger.UNLIMITED,
                                  exe_path=command[0],
                                  args=command[1::],
@@ -171,7 +190,8 @@ class JudgeClient(object):
                                  seccomp_rule_name=seccomp_rule,
                                  uid=RUN_USER_UID,
                                  gid=RUN_GROUP_GID,
-                                 memory_limit_check_only=self._run_config.get("memory_limit_check_only", 0),
+                                 memory_limit_check_only=self._run_config.get(
+                                     "memory_limit_check_only", 0),
                                  **kwargs)
         run_result["test_case"] = test_case_file_id
 
@@ -179,12 +199,14 @@ class JudgeClient(object):
         run_result["output_md5"] = None
         run_result["output"] = None
         if run_result["result"] == _judger.RESULT_SUCCESS:
-            self._check_is_ac(run_result, user_output_file, in_file, test_case_file_id)
+            self._check_is_ac(run_result, user_output_file,
+                              in_file, test_case_file_id)
 
         if self._output:
             try:
                 with open(user_output_file, "rb") as f:
-                    run_result["output"] = f.read().decode("utf-8", errors="backslashreplace")
+                    run_result["output"] = f.read().decode(
+                        "utf-8", errors="backslashreplace")
             except Exception:
                 pass
 
@@ -194,7 +216,8 @@ class JudgeClient(object):
         tmp_result = []
         result = []
         for test_case_file_id, _ in self._test_case_info["test_cases"].items():
-            tmp_result.append(self._pool.apply_async(_run, (self, test_case_file_id)))
+            tmp_result.append(self._pool.apply_async(
+                _run, (self, test_case_file_id)))
         self._pool.close()
         self._pool.join()
         for item in tmp_result:
