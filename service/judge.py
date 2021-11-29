@@ -68,8 +68,6 @@ def judge(  language_config: dict, src: str, max_cpu_time: int, max_memory: int,
         return
     if program_name is None:
         program_name = "Main"
-    else:
-        print(program_name)
 
     compile_config = language_config.get("compile")
     compile_config["src_name"] = compile_config["src_name"].format(program_name=program_name)
