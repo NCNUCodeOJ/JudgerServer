@@ -9,7 +9,7 @@ from service.errors import CompileError
 from language import config
 
 
-def callback(channel, method, properties, body):
+def callback(channel, method, _, body):
     """
     Callback function for receiving message
     """
