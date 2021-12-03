@@ -17,6 +17,7 @@
         "println",
         "psutil",
         "PYTHONIOENCODING",
+        "RABBITMQ",
         "scanf",
         "unbuffer"
     ],
