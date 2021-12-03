@@ -3,6 +3,8 @@ Judger server service main
 """
 import json
 import sys
+import os
+import requests
 import pika
 from service import judge
 from service.errors import CompileError
@@ -20,19 +22,25 @@ def callback(channel, method, _, body):
     try:
         result = judge.judge(
             language_config, body["source_code"], body["max_cpu_time"], body["max_memory"],
-            str(body["submission_id"]), str(body["test_case_id"]), body["program_name"]
+            str(body["submission_id"]), str(
+                body["test_case_id"]), body["program_name"]
         )
-        print({
-            "submission_id": body["submission_id"],
+        path = os.getenv("SUBMISSION_URL")+"/"+str(body["submission_id"])+"/judge"
+        res = requests.patch(path, json={
             "compile_error": 0,
             "results": result
         })
+        if os.getenv("LOG") == "1":
+            print(res.text)
+            print (res.request.body)
     except CompileError as _:
-        print({
-            "submission_id": body["submission_id"],
+        res = requests.patch(path, json={
             "compile_error": 1,
             "results": []
         })
+        if os.getenv("LOG") == "1":
+            print(res.text)
+            print (res.request.body)
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
@@ -41,7 +49,7 @@ def main():
     Main function
     """
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters('10.211.55.23'))
+        pika.ConnectionParameters(host=os.getenv("RABBITMQ")))
     channel = connection.channel()
     queue_name = "program_submission"
     channel.queue_declare(queue=queue_name, durable=True)
