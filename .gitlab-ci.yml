@@ -7,7 +7,7 @@ stages:
 test:
   stage: test
   script:
-    - docker build -t judger_test .
+    - docker build -f Dockerfile.test -t judger_test .
     - bash test.sh
 
 deployJob:
