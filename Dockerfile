@@ -19,4 +19,5 @@ RUN buildDeps='software-properties-common git libtool cmake  libseccomp-dev curl
     useradd -u 12003 spj && usermod -a -G code spj
 RUN mkdir /log
 WORKDIR /code
+COPY . /code
 ENTRYPOINT python3 main.py
