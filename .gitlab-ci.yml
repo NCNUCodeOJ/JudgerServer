@@ -2,12 +2,12 @@ stages:
   # - test
   - deploy
 
-# test:
-#   stage: test
-#   image: docker:19.03.12
-#   script:
-#     - docker build -f Dockerfile.test -t judger_test .
-#     - sh test.sh
+test:
+  stage: test
+  image: docker:19.03.12
+  script:
+    - docker build -f test.gitlab.Dockerfile -t judger_test .
+    - sh test.gitlab.sh
 
 deployJob:
   image: docker:19.03.12
