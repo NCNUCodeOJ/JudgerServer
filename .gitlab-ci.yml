@@ -1,13 +1,14 @@
 stages:
-  # - test
+  - test
   - deploy
 
-# test:
-#   stage: test
-#   image: docker:19.03.12
-#   script:
-#     - docker build -f Dockerfile.test -t judger_test .
-#     - sh test.sh
+test:
+  stage: test
+  image: docker:19.03.12
+  script:
+    - docker build -f test.gitlab.Dockerfile -t gitlab_judger_test .
+    - sh test.gitlab.sh
+    - docker rmi gitlab_judger_test
 
 deployJob:
   image: docker:19.03.12
@@ -20,3 +21,5 @@ deployJob:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+    - docker logout
+    - docker rmi $IMAGE_TAG
