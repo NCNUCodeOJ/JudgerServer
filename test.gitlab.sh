@@ -2,7 +2,7 @@ docker run --tmpfs /judger/run:exec \
     --tmpfs /judger/spj:exec \
     --tmpfs /log \
     --tmpfs /tmp \
-    --rm --read-only --cap-drop FSETID \
+    --rm --cap-drop FSETID \
     --cap-drop MKNOD \
     --cap-drop SETFCAP \
     --cap-drop SETPCAP \
