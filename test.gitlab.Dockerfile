@@ -22,5 +22,5 @@ COPY language /code/language
 COPY service /code/service
 COPY main.py /code/main.py
 COPY test.py /code/test.py
-COPY testcase/case/ /testcase
+COPY testcase/ /code/testcase
 WORKDIR /code
