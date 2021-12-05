@@ -1,4 +1,4 @@
-docker run -v $PWD:/code -v $PWD/testcase/case/:/testcase \
+docker run -v $PWD:/code -v $PWD/testcase/case/:/test_case \
                --tmpfs /judger/run:exec \
                --tmpfs /judger/spj:exec \
                --tmpfs /log \
