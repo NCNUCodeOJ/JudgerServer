@@ -18,6 +18,8 @@ RUN buildDeps='software-properties-common git libtool cmake  libseccomp-dev curl
     useradd -u 12001 compiler && useradd -u 12002 code && \
     useradd -u 12003 spj && usermod -a -G code spj
 RUN mkdir /log
-COPY . /code
-COPY ./testcase/case/ /testcase
+COPY language /code/language
+COPY service /code/service
+COPY main.py /code/main.py
+COPY testcase/case/ /testcase
 WORKDIR /code
