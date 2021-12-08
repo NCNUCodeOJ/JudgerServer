@@ -7,6 +7,7 @@ import os
 import requests
 import pika
 from service import judge
+from service.utils import logger
 from service.errors import CompileError
 from language import config
 
@@ -31,16 +32,16 @@ def callback(channel, method, _, body):
             "results": result
         })
         if os.getenv("LOG") == "1":
-            print(res.text)
-            print (res.request.body)
+            logger.warning(res.text)
+            logger.warning(res.request.body)
     except CompileError as _:
         res = requests.patch(path, json={
             "compile_error": 1,
             "results": []
         })
         if os.getenv("LOG") == "1":
-            print(res.text)
-            print (res.request.body)
+            logger.warning(res.text)
+            logger.warning(res.request.body)
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
