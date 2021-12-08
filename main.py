@@ -30,28 +30,21 @@ def callback(channel, method, _, body):
             "compile_error": 0,
             "results": result
         })
-        if os.getenv("LOG") == "1":
+        if os.getenv("LOG") == "true":
             print(res.text)
             print (res.request.body)
-            with open("tmp/log", "w", encoding="utf-8") as file:
-                file.write(res.text)
-                file.write(res.request.body)
-    except CompileError as _:
+    except CompileError as exception:
         res = requests.patch(path, json={
             "compile_error": 1,
             "results": []
         })
-        if os.getenv("LOG") == "1":
+        if os.getenv("LOG") == "true":
             print(res.text)
             print (res.request.body)
-            with open("tmp/log", "w", encoding="utf-8") as file:
-                file.write(res.text)
-                file.write(res.request.body)
+            print(exception.message, exception)
         print(res.text)
         print (res.request.body)
-        with open("tmp/log", "w", encoding="utf-8") as file:
-            file.write(res.text)
-            file.write(res.request.body)
+        print(exception.message, exception)
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
