@@ -19,13 +19,13 @@ def callback(channel, method, _, body):
     language_config = config.LanguageConfig(
         body["language"], body["max_cpu_time"], body["max_memory"]
     ).config
+    path = os.getenv("SUBMISSION_URL")+"/"+str(body["submission_id"])+"/judge"
     try:
         result = judge.judge(
             language_config, body["source_code"], body["max_cpu_time"], body["max_memory"],
             str(body["submission_id"]), str(
                 body["test_case_id"]), body["program_name"]
         )
-        path = os.getenv("SUBMISSION_URL")+"/"+str(body["submission_id"])+"/judge"
         res = requests.patch(path, json={
             "compile_error": 0,
             "results": result
