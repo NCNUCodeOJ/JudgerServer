@@ -37,8 +37,8 @@ def callback(channel, method, _, body):
                 file.write(res.text)
                 file.write(res.request.body)
         with open("tmp/log", "w", encoding="utf-8") as file:
-                file.write(res.text)
-                file.write(res.request.body)
+            file.write(res.text)
+            file.write(res.request.body)
     except CompileError as _:
         res = requests.patch(path, json={
             "compile_error": 1,
@@ -51,8 +51,8 @@ def callback(channel, method, _, body):
                 file.write(res.text)
                 file.write(res.request.body)
         with open("tmp/log", "w", encoding="utf-8") as file:
-                file.write(res.text)
-                file.write(res.request.body)
+            file.write(res.text)
+            file.write(res.request.body)
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
