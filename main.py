@@ -31,8 +31,8 @@ def callback(channel, method, _, body):
             "results": result
         })
         if os.getenv("LOG") == "true":
-            print(res.text)
-            print (res.request.body)
+            print(res.text, flush=True)
+            print (res.request.body, flush=True)
     except CompileError as exception:
         res = requests.patch(path, json={
             "compile_error": 1,
@@ -42,9 +42,9 @@ def callback(channel, method, _, body):
             print(res.text)
             print (res.request.body)
             print(exception.message, exception)
-        print(res.text)
-        print (res.request.body)
-        print(exception.message, exception)
+        print(res.text, flush=True)
+        print (res.request.body, flush=True)
+        print(exception.message, exception, flush=True)
     channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
