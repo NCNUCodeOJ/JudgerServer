@@ -36,9 +36,6 @@ def callback(channel, method, _, body):
             with open("tmp/log", "w", encoding="utf-8") as file:
                 file.write(res.text)
                 file.write(res.request.body)
-        with open("tmp/log", "w", encoding="utf-8") as file:
-            file.write(res.text)
-            file.write(res.request.body)
     except CompileError as _:
         res = requests.patch(path, json={
             "compile_error": 1,
@@ -50,6 +47,8 @@ def callback(channel, method, _, body):
             with open("tmp/log", "w", encoding="utf-8") as file:
                 file.write(res.text)
                 file.write(res.request.body)
+        print(res.text)
+        print (res.request.body)
         with open("tmp/log", "w", encoding="utf-8") as file:
             file.write(res.text)
             file.write(res.request.body)
